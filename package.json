@@ -15,9 +15,13 @@
   "scripts": {
     "dev": "turbo run dev --parallel",
     "build": "turbo build",
-    "db:generate": "turbo run generate --filter=./packages/db",
     "lint": "biome lint",
-    "format": "biome format"
+    "format": "biome format",
+    "db:generate": "turbo run generate --filter=./packages/db",
+    "db:start": "docker compose -f docker-compose.dev.yml up -d",
+    "db:stop": "docker compose -f docker-compose.dev.yml down",
+    "db:logs": "docker compose -f docker-compose.dev.yml logs -f postgres",
+    "db:reset": "docker compose -f docker-compose.dev.yml down -v && docker-compose -f docker-compose.dev.yml up -d"
   },
   "packageManager": "pnpm@10.8.0",
   "dependencies": {
