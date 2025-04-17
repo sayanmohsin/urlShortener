@@ -1,16 +1,21 @@
-# Turborepo Boilerplate
+# 🔗 URL Shortener – Full Stack Monorepo
 
-A modern full-stack monorepo with **Next.js**, **NestJS**, and **Prisma**.
+A modern, lightweight **URL shortener** built with **React**, **NestJS**, **PostgreSQL**, and **Prisma** in a powerful monorepo architecture using **Turborepo**.
+
+---
 
 ## 🚀 Features
 
-- **TypeScript** – End-to-end type safety  
-- **Turborepo** – Efficient build system with caching  
-- **Next.js** – Powerful frontend framework  
-- **NestJS** – Scalable backend with structured logging  
-- **Prisma ORM** – Type-safe database toolkit in a shared package  
-- **Zod** – Runtime schema validation  
-- **Biome** – Lightning-fast linting and formatting  
+- ⚡ **Full Stack TypeScript** – End-to-end static typing  
+- 📦 **Turborepo** – Blazing fast monorepo tooling with caching  
+- 🧠 **React (Next.js)** – Clean, fast frontend with Tailwind CSS  
+- 🛠️ **NestJS** – Scalable, modular backend architecture  
+- 🧬 **Prisma ORM** – Type-safe database access layer (shared package)  
+- 🛡 **Zod** – End-to-end schema validation  
+- 🧹 **Biome** – Unified code formatter and linter  
+- 🐳 **Docker + Docker Compose** – Easy local development and deployment
+
+---
 
 ## 🗂️ Project Structure
 
@@ -18,28 +23,55 @@ A modern full-stack monorepo with **Next.js**, **NestJS**, and **Prisma**.
 .
 ├── apps/
 │   ├── api/                # NestJS backend
-│   └── web/                # Next.js frontend
+│   └── web/                # React frontend
 ├── packages/
 │   └── db/                 # Prisma schema & client
+├── docker/
+│   ├── dev/                # Docker Compose for local development
+│   └── prod/               # Dockerfiles for production deployment
 ├── turbo.json              # Turborepo configuration
 └── pnpm-workspace.yaml     # Monorepo workspace configuration
 ```
 
-## ⚙️ Getting Started
+---
+
+## ⚙️ Getting Started (Local Dev)
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Set up environment variables
+# Set up environment
 cp .env.example .env
 
 # Generate Prisma client
 pnpm db:generate
 
-# Start development servers
+# Start the development servers
 pnpm dev
 ```
+
+---
+
+## 🐳 Docker Usage
+
+### Development
+
+To run everything in a Dockerized local environment:
+
+```bash
+docker-compose -f docker/dev/docker-compose.yml up --build
+```
+
+### Production
+
+Build and run production containers:
+
+```bash
+docker-compose -f docker/prod/docker-compose.yml up --build -d
+```
+
+---
 
 ## 📜 Scripts
 
@@ -48,5 +80,20 @@ pnpm dev
 | `pnpm dev`          | Start all apps in development mode |
 | `pnpm build`        | Build all apps                     |
 | `pnpm db:generate`  | Generate Prisma client             |
+| `pnpm db:migrate`   | Run Prisma migrations              |
 | `pnpm lint`         | Lint the entire codebase           |
 | `pnpm format`       | Format code using Biome            |
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js, React, Tailwind CSS  
+- **Backend:** NestJS, Zod  
+- **Database:** PostgreSQL  
+- **ORM:** Prisma  
+- **Monorepo Tooling:** Turborepo, PNPM  
+- **Containerization:** Docker  
+- **Tooling:** Biome for linting/formatting
+
+---
