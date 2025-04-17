@@ -16,10 +16,8 @@ async function bootstrap() {
   app.useLogger(logger);
   app.enableCors();
 
-  // Start the server first
   await app.listen(port);
 
-  // Then get the URL
   const url = await app.getUrl();
 
   logger.log(`URL Shortener API running in ${env} mode`);

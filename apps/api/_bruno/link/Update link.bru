@@ -1,0 +1,25 @@
+meta {
+  name: Update link
+  type: http
+  seq: 2
+}
+
+put {
+  url: api{{host}}/api/links
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "originalUrl": "https://google.com"
+  }
+}
+
+vars:pre-request {
+  : 
+}

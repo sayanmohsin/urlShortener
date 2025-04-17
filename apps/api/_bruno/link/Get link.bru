@@ -1,0 +1,19 @@
+meta {
+  name: Get link
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{host}}/api/links
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  : 
+}

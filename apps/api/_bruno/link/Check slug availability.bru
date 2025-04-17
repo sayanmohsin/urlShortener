@@ -1,0 +1,19 @@
+meta {
+  name: Check slug availability
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{host}}/api/slugs/availability
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+vars:pre-request {
+  : 
+}

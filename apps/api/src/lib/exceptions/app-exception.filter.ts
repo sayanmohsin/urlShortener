@@ -1,21 +1,23 @@
 import {
-  type ArgumentsHost,
+  ArgumentsHost,
   Catch,
-  type ExceptionFilter,
+  ExceptionFilter,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import type { Request, Response } from 'express';
 import { AppLoggerService } from '../logger/app-logger.service';
+import { BaseExceptionFilter } from './base-exception.filter';
 
 @Catch()
-export class AppExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: AppLoggerService) {}
+export class AppExceptionFilter
+  extends BaseExceptionFilter
+  implements ExceptionFilter
+{
+  constructor(protected readonly logger: AppLoggerService) {
+    super(logger);
+  }
 
   catch(exception: unknown, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
@@ -23,17 +25,25 @@ export class AppExceptionFilter implements ExceptionFilter {
 
     const message = this.getErrorMessage(exception);
 
-    this.logger.error(
-      `Status: ${status} Method: ${request.method} URL: ${request.url} Error: ${JSON.stringify(message)}`,
-      exception instanceof Error ? exception.stack : ''
-    );
+    let code: string | undefined;
+    if (exception instanceof HttpException) {
+      const exResponse = exception.getResponse();
+      if (
+        typeof exResponse === 'object' &&
+        exResponse !== null &&
+        'code' in exResponse
+      ) {
+        code = (exResponse as { code: string }).code;
+      }
+    }
 
-    response.status(status).send({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
+    this.createErrorResponse(
+      exception instanceof Error ? exception : new Error('Unknown error'),
+      host,
+      status,
       message,
-    });
+      code
+    );
   }
 
   private getErrorMessage(exception: unknown): string {
@@ -47,9 +57,15 @@ export class AppExceptionFilter implements ExceptionFilter {
         response !== null &&
         'message' in response
       ) {
-        return (response as { message: string | string[] }).message.toString();
+        const message = (response as { message: string | string[] }).message;
+        return Array.isArray(message) ? message.join('; ') : message.toString();
       }
     }
+
+    if (exception instanceof Error) {
+      return exception.message || 'Internal server error';
+    }
+
     return 'Internal server error';
   }
 }
