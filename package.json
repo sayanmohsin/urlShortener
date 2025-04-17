@@ -17,14 +17,17 @@
     "build": "turbo build",
     "lint": "biome lint",
     "format": "biome format",
+    "db:push": "turbo run push --filter=./packages/db",
+    "db:migrate": "turbo run migrate --filter=./packages/db",
     "db:generate": "turbo run generate --filter=./packages/db",
     "db:start": "docker compose -f docker-compose.dev.yml up -d",
     "db:stop": "docker compose -f docker-compose.dev.yml down",
     "db:logs": "docker compose -f docker-compose.dev.yml logs -f postgres",
     "db:reset": "docker compose -f docker-compose.dev.yml down -v && docker-compose -f docker-compose.dev.yml up -d"
   },
-  "packageManager": "pnpm@10.8.0",
+  "packageManager": "pnpm@10.8.1",
   "dependencies": {
+    "dotenv-cli": "^8.0.0",
     "nestjs-zod": "^4.3.1",
     "winston": "^3.17.0"
   }
