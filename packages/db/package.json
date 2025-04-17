@@ -1,16 +1,17 @@
 {
   "name": "@url-shortener/db",
   "version": "1.0.0",
-  "main": "index.ts",
   "private": true,
   "scripts": {
-    "generate": "prisma generate"
+    "generate": "prisma generate",
+    "push": "dotenv -e ../../.env -- prisma db push",
+    "migrate": "dotenv -e ../../.env -- prisma migrate dev"
   },
   "dependencies": {
-    "@prisma/client": "^5.0.0"
+    "@prisma/client": "^6.6.0"
   },
   "devDependencies": {
-    "prisma": "^5.0.0"
+    "prisma": "^6.6.0"
   },
   "prisma": {
     "schema": "./prisma/schema.prisma"

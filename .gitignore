@@ -101,6 +101,7 @@ exported/
 **/.temp/
 **/.tmp/
 **/*.swp
+generated/
 
 # -------------------------------
 # Node diagnostic reports
