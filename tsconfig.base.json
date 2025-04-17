@@ -1,13 +1,14 @@
 {
-	"compilerOptions": {
-		"strict": true,
-		"esModuleInterop": true,
-		"skipLibCheck": true,
-		"resolveJsonModule": true,
-		"moduleResolution": "node",
-		"incremental": true,
-		"allowSyntheticDefaultImports": true,
-		"forceConsistentCasingInFileNames": true,
-		"baseUrl": "."
-	}
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "incremental": true,
+    "allowSyntheticDefaultImports": true,
+    "exclude": ["node_modules", "dist", "generated"],
+    "references": [{ "path": "apps/api" }, { "path": "apps/web" }]
+  }
 }
