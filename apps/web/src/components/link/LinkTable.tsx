@@ -1,91 +1,94 @@
 import { Link } from '@url-shortener/db/generated';
-import React from 'react';
+import React, { useState } from 'react';
 import { styles } from '../../styles/styles';
 import { Button } from '../ui/Button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../ui/Table';
+import { Card } from '../ui/Card';
 
 interface LinkTableProps {
   links: Link[];
-  onEditUrl: (link: Link) => void;
+  onEditUrl: (url: Link) => void;
 }
 
 export function LinkTable({ links, onEditUrl }: LinkTableProps) {
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyToClipboard = (link: Link) => {
+    const shortUrl = `${window.location.origin}/${link.slug}`;
+    navigator.clipboard.writeText(shortUrl);
+    setCopiedId(link.id);
+
+    // Reset the "Copied" status after 2 seconds
+    setTimeout(() => {
+      setCopiedId(null);
+    }, 2000);
+  };
+
   if (links.length === 0) {
     return (
-      <p style={styles.centered}>You haven't created any short URLs yet.</p>
+      <Card style={{ padding: '20px', textAlign: 'center' }}>
+        You haven't created any short URLs yet.
+      </Card>
     );
   }
 
-  const copyToClipboard = (slug: string) => {
-    const fullUrl = `${window.location.origin}/${slug}`;
-    navigator.clipboard.writeText(fullUrl);
-    alert('URL copied to clipboard!');
-  };
-
   return (
-    <div style={styles.tableContainer}>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Original URL</TableHead>
-            <TableHead>Short URL</TableHead>
-            <TableHead>Visits</TableHead>
-            <TableHead>Created</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {links.map((link) => {
-            const fullShortUrl = `${window.location.origin}/${link.slug}`;
-            return (
-              <TableRow key={link.id}>
-                <TableCell style={styles.truncate} title={link.originalUrl}>
+    <div style={{ overflowX: 'auto' }}>
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th>Short URL</th>
+            <th>Original URL</th>
+            <th>Created</th>
+            <th>Visits</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {links.map((link) => (
+            <tr key={link.id}>
+              <td>
+                <a
+                  href={`${window.location.origin}/${link.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontWeight: 'bold' }}
+                >
+                  /{link.slug}
+                </a>
+              </td>
+              <td
+                style={{
+                  maxWidth: '200px',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                <a
+                  href={link.originalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={link.originalUrl}
+                >
                   {link.originalUrl}
-                </TableCell>
-                <TableCell>
-                  <a
-                    href={fullShortUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={styles.link}
+                </a>
+              </td>
+              <td>{new Date(link.createdAt).toLocaleDateString()}</td>
+              <td>{link.visits}</td>
+              <td>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <Button
+                    variant="outline"
+                    onClick={() => copyToClipboard(link)}
                   >
-                    {link.slug}
-                  </a>
-                </TableCell>
-                <TableCell>{link.visits}</TableCell>
-                <TableCell>
-                  {new Date(link.createdAt).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <div style={styles.flexRow}>
-                    <Button
-                      variant="outline"
-                      onClick={() => copyToClipboard(link.slug)}
-                      style={styles.smallButton}
-                    >
-                      Copy
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => onEditUrl(link)}
-                      style={styles.smallButton}
-                    >
-                      Edit
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                    {copiedId === link.id ? 'Copied!' : 'Copy'}
+                  </Button>
+                  <Button onClick={() => onEditUrl(link)}>Edit</Button>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -1,19 +1,57 @@
 import { Link } from '@url-shortener/db/generated';
-import React from 'react';
-import { styles } from '../../styles/styles';
+import React, { useEffect, useState } from 'react';
+import { linkApi } from '../../services/api';
 import { Button } from '../ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 
-interface TopLinkCardProps {
-  link: Link;
-}
+export function TopLinkCard() {
+  const [topLink, setTopLink] = useState<Link | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-export function TopLinkCard({ link }: TopLinkCardProps) {
+  useEffect(() => {
+    const fetchTopLink = async () => {
+      try {
+        const { data } = await linkApi.getMyMostVisited();
+        setTopLink(data);
+      } catch (err) {
+        console.error('Failed to fetch top URL');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTopLink();
+  }, []);
+
   const copyToClipboard = () => {
-    const fullUrl = `${window.location.origin}/${link.slug}`;
-    navigator.clipboard.writeText(fullUrl);
+    if (!topLink) return;
+
+    const shortUrl = `${window.location.origin}/${topLink.slug}`;
+    navigator.clipboard.writeText(shortUrl);
     alert('URL copied to clipboard!');
   };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Most Visited URL</CardTitle>
+        </CardHeader>
+        <CardContent>Loading...</CardContent>
+      </Card>
+    );
+  }
+
+  if (!topLink) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Most Visited URL</CardTitle>
+        </CardHeader>
+        <CardContent>No URLs created yet.</CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -21,34 +59,53 @@ export function TopLinkCard({ link }: TopLinkCardProps) {
         <CardTitle>Most Visited URL</CardTitle>
       </CardHeader>
       <CardContent>
-        <div>
-          <p style={{ marginBottom: '8px' }}>
-            <strong>Original URL:</strong>{' '}
-            <span style={styles.truncate} title={link.originalUrl}>
-              {link.originalUrl}
-            </span>
-          </p>
-          <p style={{ marginBottom: '8px' }}>
-            <strong>Short URL:</strong>{' '}
+        <div style={{ marginBottom: '12px' }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+            Short URL:
+          </div>
+          <a
+            href={`${window.location.origin}/${topLink.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {window.location.origin}/{topLink.slug}
+          </a>
+        </div>
+
+        <div style={{ marginBottom: '12px' }}>
+          <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>
+            Original URL:
+          </div>
+          <div
+            style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
             <a
-              href={`${window.location.origin}/${link.slug}`}
+              href={topLink.originalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={styles.link}
+              title={topLink.originalUrl}
             >
-              {window.location.origin}/{link.slug}
+              {topLink.originalUrl}
             </a>
-          </p>
-          <p style={{ marginBottom: '8px' }}>
-            <strong>Visits:</strong> {link.visits}
-          </p>
-          <Button
-            variant="outline"
-            onClick={copyToClipboard}
-            style={{ marginTop: '8px' }}
-          >
-            Copy URL
-          </Button>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: '16px',
+          }}
+        >
+          <div>
+            <strong>{topLink.visits}</strong> total visits
+          </div>
+          <Button onClick={copyToClipboard}>Copy URL</Button>
         </div>
       </CardContent>
     </Card>

@@ -19,25 +19,10 @@ model Link {
   isActive    Boolean  @default(true)
 
   // Relations
-  user      User    @relation(fields: [userId], references: [id])
-  visitLogs Visit[]
+  user User @relation(fields: [userId], references: [id])
 
   @@index([slug])
   @@index([userId])
-}
-
-model Visit {
-  id        String   @id @default(uuid())
-  linkId    String   @map("url_id")
-  ipAddress String?
-  userAgent String?
-  referrer  String?
-  visitedAt DateTime @default(now())
-
-  // Relations
-  link Link @relation(fields: [linkId], references: [id])
-
-  @@index([linkId])
 }
 
 model User {

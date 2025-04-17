@@ -12,9 +12,19 @@ export class LinkRepository {
     });
   }
 
-  async find(where: Prisma.LinkWhereInput) {
+  async find(
+    where: Prisma.LinkWhereInput,
+    orderBy: Prisma.LinkOrderByWithRelationInput = {
+      createdAt: 'desc',
+    },
+    take: number | undefined = undefined,
+    skip = 0
+  ) {
     return this.prismaService.link.findMany({
       where,
+      orderBy,
+      skip,
+      take,
     });
   }
 

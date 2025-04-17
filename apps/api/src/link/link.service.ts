@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Link } from '@url-shortener/shared-types';
 import type { EnvConfig } from '../config/configuration';
 import { CreateLink } from './defs/create-link.def';
 import { UpdateLink } from './defs/update-link.def';
@@ -77,5 +78,27 @@ export class LinkService {
         increment: 1,
       },
     });
+  }
+
+  async getUserMostVisited(userId: string) {
+    const links = await this.linkRepository.find(
+      {
+        userId,
+      },
+      {
+        visits: 'desc',
+      },
+      1
+    );
+
+    if (links.length > 0 && links[0].visits > 0) {
+      const link = links[0];
+      return {
+        ...link,
+        shortUrl: this.generateShortUrl(link.slug),
+      } as Link;
+    }
+
+    return null;
   }
 }

@@ -1,6 +1,5 @@
 import { Link } from '@url-shortener/db/generated';
-// src/components/url/UrlForm.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { linkApi } from '../../services/api';
 import { styles } from '../../styles/styles';
 import { Button } from '../ui/Button';
@@ -18,73 +17,68 @@ interface LinkFormProps {
 }
 
 export function LinkForm({ onLinkCreated }: LinkFormProps) {
-  const [url, setUrl] = useState('');
+  const [originalUrl, setOriginalUrl] = useState('');
   const [customSlug, setCustomSlug] = useState('');
-  const [shortUrl, setShortUrl] = useState('');
   const [error, setError] = useState('');
-  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckingSlug, setIsCheckingSlug] = useState(false);
+  const [slugAvailable, setSlugAvailable] = useState<boolean | null>(null);
 
-  // Check slug availability
-  const checkSlugAvailability = async () => {
-    if (!customSlug) {
-      setSlugAvailable(null);
-      return;
+  // Check slug availability when typing
+  useEffect(() => {
+    if (customSlug) {
+      const timer = setTimeout(async () => {
+        setIsCheckingSlug(true);
+        try {
+          const { data } = await linkApi.checkSlugAvailability({
+            slug: customSlug,
+          });
+          setSlugAvailable(data.available);
+        } catch (err) {
+          setSlugAvailable(null);
+        } finally {
+          setIsCheckingSlug(false);
+        }
+      }, 500);
+
+      return () => clearTimeout(timer);
     }
-
-    setIsCheckingSlug(true);
-    try {
-      const { data } = await linkApi.checkSlugAvailability({
-        slug: customSlug,
-      });
-      setSlugAvailable(data.available);
-    } catch (err) {
-      setSlugAvailable(null);
-    } finally {
-      setIsCheckingSlug(false);
-    }
-  };
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (customSlug) {
-        checkSlugAvailability();
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
   }, [customSlug]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
+
+    // Validation
+    if (!originalUrl) {
+      setError('Please enter a URL');
+      return;
+    }
+
+    if (customSlug && !slugAvailable) {
+      setError('This custom slug is not available');
+      return;
+    }
 
     try {
+      setError('');
+      setIsSubmitting(true);
+
       const { data } = await linkApi.createLink({
-        originalUrl: url,
+        originalUrl,
         slug: customSlug || undefined,
       });
 
-      const baseUrl = window.location.origin;
-      setShortUrl(data.shortUrl);
       onLinkCreated(data);
 
       // Reset form
-      setUrl('');
+      setOriginalUrl('');
       setCustomSlug('');
       setSlugAvailable(null);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to create URL');
+      setError(err.response?.data?.message || 'Failed to create short URL');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
-  };
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(shortUrl);
-    alert('URL copied to clipboard!');
   };
 
   return (
@@ -97,15 +91,15 @@ export function LinkForm({ onLinkCreated }: LinkFormProps) {
           {error && <div style={styles.error}>{error}</div>}
 
           <div style={styles.formGroup}>
-            <label htmlFor="url" style={styles.label}>
-              URL to shorten
+            <label htmlFor="originalUrl" style={styles.label}>
+              Original URL
             </label>
             <Input
-              id="url"
+              id="originalUrl"
               type="url"
-              placeholder="https://example.com/long-url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              value={originalUrl}
+              onChange={(e) => setOriginalUrl(e.target.value)}
+              placeholder="https://example.com/very-long-url"
               required
             />
           </div>
@@ -116,9 +110,9 @@ export function LinkForm({ onLinkCreated }: LinkFormProps) {
             </label>
             <Input
               id="customSlug"
-              placeholder="my-custom-slug"
               value={customSlug}
               onChange={(e) => setCustomSlug(e.target.value)}
+              placeholder="my-custom-slug"
             />
             {isCheckingSlug && (
               <div style={{ fontSize: '12px', marginTop: '4px' }}>
@@ -137,26 +131,14 @@ export function LinkForm({ onLinkCreated }: LinkFormProps) {
               </div>
             )}
           </div>
-
-          {shortUrl && (
-            <div style={styles.resultBox}>
-              <p style={{ marginBottom: '8px' }}>Your shortened URL:</p>
-              <div style={styles.flexRow}>
-                <Input value={shortUrl} readOnly style={{ flex: 1 }} />
-                <Button type="button" onClick={copyToClipboard}>
-                  Copy
-                </Button>
-              </div>
-            </div>
-          )}
         </CardContent>
+
         <CardFooter>
           <Button
             type="submit"
-            disabled={isLoading || (customSlug !== '' && !slugAvailable)}
-            style={styles.fullWidth}
+            disabled={isSubmitting || (customSlug !== '' && !slugAvailable)}
           >
-            {isLoading ? 'Creating...' : 'Shorten URL'}
+            {isSubmitting ? 'Creating...' : 'Create Short URL'}
           </Button>
         </CardFooter>
       </form>

@@ -1,12 +1,14 @@
 import { User } from '@url-shortener/db/generated';
-import { Link } from '@url-shortener/shared-types';
-import { AuthResponse } from '@url-shortener/shared-types/types/auth-dtos/api-response';
-import { LoginDto } from '@url-shortener/shared-types/types/auth-dtos/login.dto';
-import { RegisterDto } from '@url-shortener/shared-types/types/auth-dtos/register.dto';
-import { CreateLinkDto } from '@url-shortener/shared-types/types/link-dtos/create-link.dtos';
-import { SlugAvailabilityResponse } from '@url-shortener/shared-types/types/link-dtos/slug-availability-response';
-import { SlugAvailabilityDto } from '@url-shortener/shared-types/types/link-dtos/slug-available.dtos';
-import { UpdateLinkDto } from '@url-shortener/shared-types/types/link-dtos/update-link.dtos';
+import type {
+  AuthResponse,
+  CreateLinkDto,
+  Link,
+  LoginDto,
+  RegisterDto,
+  SlugAvailabilityDto,
+  SlugAvailabilityResponse,
+  UpdateLinkDto,
+} from '@url-shortener/shared-types';
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -38,6 +40,8 @@ export const linkApi = {
     api.patch<Link>(`/links/${id}`, data),
 
   getMyUrls: () => api.get<Link[]>('/links'),
+
+  getMyMostVisited: () => api.get<Link | null>('/links/most-visited'),
 
   checkSlugAvailability: (data: SlugAvailabilityDto) =>
     api.post<SlugAvailabilityResponse>('/slugs/availability', data),

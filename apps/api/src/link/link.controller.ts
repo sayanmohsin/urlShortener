@@ -40,6 +40,12 @@ export class LinkController {
   }
 
   @UseGuards(AuthGuard)
+  @Get('/most-visited')
+  getUserMostVisited(@GetCurrentUser() user: User) {
+    return this.linkService.getUserMostVisited(user.id);
+  }
+
+  @UseGuards(AuthGuard)
   @Patch('/:id')
   updateUserLink(
     @Param('id') id: string,
