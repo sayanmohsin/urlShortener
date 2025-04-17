@@ -14,7 +14,8 @@
       "node_modules",
       "coverage",
       "prisma/seed.ts",
-      ".DS_Store"
+      ".DS_Store",
+      "generated"
     ]
   },
   "formatter": {
