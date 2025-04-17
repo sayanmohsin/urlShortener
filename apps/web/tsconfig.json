@@ -1,36 +1,17 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "noEmit": true,
-    "jsx": "preserve",
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "isolatedModules": true
+    "noEmit": true,
+    "module": "esnext",
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src"]
 }

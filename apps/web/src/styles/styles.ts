@@ -1,0 +1,76 @@
+export const styles = {
+  app: {
+    fontFamily: 'system-ui, -apple-system, sans-serif',
+    maxWidth: '800px',
+    margin: '0 auto',
+    padding: '16px',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+  },
+  main: { marginBottom: '20px' },
+  form: { marginBottom: '16px' },
+  formGroup: { marginBottom: '12px' },
+  label: {
+    display: 'block',
+    marginBottom: '6px',
+    fontSize: '14px',
+    fontWeight: 'bold',
+  },
+  error: {
+    color: '#e53e3e',
+    fontSize: '14px',
+    marginBottom: '12px',
+  },
+  success: {
+    color: '#38a169',
+    fontSize: '14px',
+    marginBottom: '12px',
+  },
+  resultBox: {
+    backgroundColor: '#ebf8ff',
+    padding: '12px',
+    borderRadius: '4px',
+    marginTop: '12px',
+  },
+  flexRow: { display: 'flex', gap: '8px' },
+  truncate: {
+    maxWidth: '200px',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  highlight: {
+    backgroundColor: '#f0fff4',
+    padding: '12px',
+    borderRadius: '4px',
+    marginBottom: '16px',
+  },
+  link: { color: '#3182ce', textDecoration: 'none' },
+  buttonLink: {
+    color: '#3182ce',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    padding: 0,
+  },
+  smallButton: {
+    padding: '4px 8px',
+    fontSize: '12px',
+  },
+  fullWidth: { width: '100%' },
+  centered: { textAlign: 'center' },
+  tableContainer: {
+    border: '1px solid #eaeaea',
+    borderRadius: '8px',
+    overflow: 'auto',
+  },
+  formCard: {
+    maxWidth: '400px',
+    margin: '0 auto',
+  },
+};
