@@ -1,0 +1,15 @@
+{
+  "name": "@url-shortener/shared-types",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@nestjs/swagger": "^11.1.3",
+    "@url-shortener/db": "workspace:^",
+    "nestjs-zod": "^4.3.1"
+  }
+}

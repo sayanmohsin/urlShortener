@@ -4,13 +4,13 @@
   "author": "SayanMohsin",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@types/lodash": "^4.17.16",
     "@types/node": "^22.14.1",
     "@types/supertest": "^6.0.3",
     "@vitest/coverage-v8": "^3.1.1",
     "turbo": "^2.5.0",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.1",
-    "zod": "^3.24.2"
+    "vitest": "^3.1.1"
   },
   "scripts": {
     "dev": "turbo run dev --parallel",
@@ -28,7 +28,7 @@
   "packageManager": "pnpm@10.8.1",
   "dependencies": {
     "dotenv-cli": "^8.0.0",
-    "nestjs-zod": "^4.3.1",
-    "winston": "^3.17.0"
+    "winston": "^3.17.0",
+    "zod": "^3.24.3"
   }
 }

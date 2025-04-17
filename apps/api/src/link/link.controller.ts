@@ -7,11 +7,14 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { User } from '@url-shortener/db/generated';
+import type { User } from '@url-shortener/db/generated';
+import type {
+  CreateLinkDto,
+  Link,
+  UpdateLinkDto,
+} from '@url-shortener/shared-types';
 import { AuthGuard } from '../auth/auth.guard';
 import { GetCurrentUser } from '../auth/decorators/get-current-user.decorator';
-import { CreateLinkDto } from '../types/link-dtos/create-link.dtos';
-import { UpdateLinkDto } from '../types/link-dtos/update-link.dtos';
 import { LinkService } from './link.service';
 
 @Controller('api/links')
@@ -23,7 +26,7 @@ export class LinkController {
   createUserLink(
     @GetCurrentUser() user: User,
     @Body() createLinkDto: CreateLinkDto
-  ) {
+  ): Promise<Link> {
     return this.linkService.createUserLink({
       ...createLinkDto,
       userId: user.id,

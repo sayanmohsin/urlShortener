@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { EnvConfig } from '../config/configuration';
+import type { EnvConfig } from '../config/configuration';
 import { CreateLink } from './defs/create-link.def';
 import { UpdateLink } from './defs/update-link.def';
 import { LinkRepository } from './link.repository';

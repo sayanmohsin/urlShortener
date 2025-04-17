@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { SlugAvailabilityDto } from '../types/link-dtos/slug-available.dtos';
+import { SlugAvailabilityDto } from '@url-shortener/shared-types';
 import { LinkService } from './link.service';
 
 @Controller('api/slugs')

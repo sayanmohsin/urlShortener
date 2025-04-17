@@ -8,27 +8,15 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@radix-ui/react-slot": "^1.2.0",
-    "@tailwindcss/vite": "^4.1.4",
     "@vitejs/plugin-react": "^4.4.0",
-    "add": "^2.0.6",
     "axios": "^1.8.4",
-    "button": "^1.1.1",
-    "card": "^2.5.4",
     "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "input": "^1.0.1",
-    "lucide-react": "^0.488.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "shadcn-ui": "^0.9.5",
-    "table": "^6.9.0",
-    "tailwind-merge": "^3.2.0",
-    "tailwindcss": "^4.1.4",
-    "tw-animate-css": "^1.2.5"
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@url-shortener/db": "workspace:^",
+    "@url-shortener/db": "workspace:*",
+    "@url-shortener/shared-types": "workspace:*",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "vite": "^6.3.0"

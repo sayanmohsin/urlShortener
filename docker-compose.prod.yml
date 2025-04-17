@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: urlshortener-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: urlshortener
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
+    container_name: urlshortener-api
+    restart: unless-stopped
+    ports:
+      - "3333:3333"
+    environment:
+      - DATABASE_URL=postgresql://postgres:root@postgres:5432/urlshortener?schema=public
+      - JWT_SECRET=your_jwt_secret
+      - PORT=3333
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    container_name: urlshortener-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - API_URL=http://localhost:3333/api
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+    driver: local

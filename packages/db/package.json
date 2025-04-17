@@ -5,7 +5,9 @@
   "scripts": {
     "generate": "prisma generate",
     "push": "dotenv -e ../../.env -- prisma db push",
-    "migrate": "dotenv -e ../../.env -- prisma migrate dev"
+    "migrate": "dotenv -e ../../.env -- prisma migrate dev",
+    "deploy": "dotenv -e ../../.env -- prisma migrate deploy",
+    "studio": "dotenv -e ../../.env -- prisma studio"
   },
   "dependencies": {
     "@prisma/client": "^6.6.0"
